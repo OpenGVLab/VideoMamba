@@ -16,11 +16,11 @@
   - [image_sm](./videomamba/image_sm/README.md): Single-modality Image Tasks
     - Image Classification: [script](./videomamba/image_sm/README.md) & [model](./videomamba/image_sm/MODEL_ZOO.md)
   - [video_sm](./videomamba/video_sm/README.md): Single-modality Video Tasks
-    - Short-term Video Understanding: [script](./videomamba/video_sm/README.md) & [model](./videomamba/video_sm/MODEL_ZOO.md)
-    - Long-term Video Understanding: [script](./videomamba/video_sm/README.md) & [model](./videomamba/video_sm/MODEL_ZOO.md)
-    - Masked Modeling: [script](./videomamba/video_sm/README.md), [model](./videomamba/video_sm/MODEL_ZOO.md)
+    - Short-term Video Understanding: [script](./videomamba/video_sm/README.md#short-term-video-understanding) & [model](./videomamba/video_sm/MODEL_ZOO.md#short-term-video-understanding)
+    - Long-term Video Understanding: [script](./videomamba/video_sm/README.md#long-term-video-understanding) & [model](./videomamba/video_sm/MODEL_ZOO.md#long-term-video-understanding)
+    - Masked Modeling: [script](./videomamba/video_sm/README.md#masked-pretraining), [model](./videomamba/video_sm/MODEL_ZOO.md#masked-pretraining)
   - [video_mm](./videomamba/video_mm/README.md): Multi-modality Video Tasks
-    - Video-Text Retrieval: [script](./videomamba/video_sm/README.md) & [model](./videomamba/video_sm/MODEL_ZOO.md)
+    - Video-Text Retrieval: [script](./videomamba/video_mm/README.md) & [model](./videomamba/video_mm/MODEL_ZOO.md)
 
 
 ## Introduction
