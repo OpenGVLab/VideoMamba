@@ -17,10 +17,6 @@ import random
 
 from tensorboardX import SummaryWriter
 
-import fnmatch
-from petrel_client.client import Client
-client = Client('~/petreloss.conf')
-
 
 class SmoothedValue(object):
     """Track a series of values and provide access to smoothed values over a
@@ -307,20 +303,9 @@ def is_main_process():
     return get_rank() == 0
 
 
-def get_ceph_path(ckpt_path, ceph_args):
-    sub_path = str(ckpt_path).split(ceph_args['ckpt_path_split'])[-1]
-    ceph_ckpt_path = os.path.join(ceph_args['ceph_checkpoint_prefix'], sub_path)
-    return sub_path, ceph_ckpt_path
-
-def save_on_master(obj, ckpt_path, ceph_args):
+def save_on_master(obj, ckpt_path):
     if is_main_process():
-        if ceph_args['use_ceph_checkpoint']:
-            _, ceph_ckpt_path = get_ceph_path(ckpt_path, ceph_args)
-            with io.BytesIO() as f:
-                torch.save(obj, f)
-                client.put(ceph_ckpt_path, f.getvalue())
-        else:
-            torch.save(obj, ckpt_path)
+        torch.save(obj, ckpt_path)
 
 
 def init_distributed_mode(args):
@@ -479,7 +464,7 @@ def cosine_scheduler(base_value, final_value, epochs, niter_per_ep, warmup_epoch
     return schedule
 
 
-def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler, model_ema=None, model_name=None, ceph_args={'use_ceph_checkpoint': False}):
+def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler, model_ema=None, model_name=None):
     output_dir = Path(args.output_dir)
     if model_name is None:
         model_name = str(epoch)
@@ -497,190 +482,85 @@ def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler, mo
             if model_ema is not None:
                 to_save['model_ema'] = get_state_dict(model_ema)
 
-            save_on_master(to_save, checkpoint_path, ceph_args=ceph_args)
+            save_on_master(to_save, checkpoint_path)
     else:
         client_state = {'epoch': epoch}
         if model_ema is not None:
             client_state['model_ema'] = get_state_dict(model_ema)
 
-        if ceph_args['use_ceph_checkpoint']:
-            sub_path, ceph_save_dir = get_ceph_path(output_dir, ceph_args)
-            local_save_dir = os.path.join('/dev/shm', sub_path)
-            Path(local_save_dir).mkdir(parents=True, exist_ok=True)
-        else:
-            local_save_dir = output_dir
+        local_save_dir = output_dir
         tag_name = "checkpoint-%s" % model_name
         model.save_checkpoint(save_dir=local_save_dir, tag=tag_name, client_state=client_state)
 
-        if ceph_args['use_ceph_checkpoint'] and ceph_args['local_rank'] == 0:
-            try:
-                ckpt_shm_dir = os.path.join(local_save_dir, tag_name)
-                ckpt_petrel_dir = os.path.join(ceph_save_dir, tag_name)
-                for f_name in os.listdir(ckpt_shm_dir):
-                    f_shm_path = os.path.join(ckpt_shm_dir, f_name)
-                    f_petrel_path = os.path.join(ckpt_petrel_dir, f_name)
-                    with open(f_shm_path, 'rb') as f:
-                        print(f"Upload checkpoint at {f_petrel_path}", flush=True)
-                        client.put(f_petrel_path, f)
-                        print("Finish! Will remove the original files!", flush=True)
-                    os.remove(f_shm_path)
-            except Exception as e:
-                print(f'Fail to upload or delete {f_shm_path} with error {e}')
 
-
-def auto_load_model(args, model, model_without_ddp, optimizer, loss_scaler, model_ema=None, ceph_args={'use_ceph_checkpoint': False}):
+def auto_load_model(args, model, model_without_ddp, optimizer, loss_scaler, model_ema=None):
     output_dir = Path(args.output_dir)
 
-    if ceph_args['use_ceph_checkpoint']:
-        sub_path, ceph_save_dir = get_ceph_path(output_dir, ceph_args)
-        if loss_scaler is not None:
-            # torch.amp
-            if args.test_best and args.eval:
-                args.resume = os.path.join(ceph_save_dir, 'checkpoint-best.pth')
-            elif check_ceph_exists(os.path.join(ceph_save_dir, 'checkpoint-latest.pth')):
-                args.resume = os.path.join(ceph_save_dir, 'checkpoint-latest.pth')
-            elif args.auto_resume and len(args.resume) == 0:
-                all_checkpoints = fnmatch.filter(list(client.list(ceph_save_dir)), 'checkpoint-*')
-                all_checkpoints = [
-                    os.path.join(ceph_save_dir, ckpt_path)
-                    for ckpt_path in all_checkpoints
-                ]
-                latest_ckpt = -1
-                for ckpt in all_checkpoints:
-                    t = ckpt.split('-')[-1].split('.')[0]
-                    if t.isdigit():
-                        latest_ckpt = max(int(t), latest_ckpt)
-                if latest_ckpt >= 0:
-                    args.resume = os.path.join(output_dir, 'checkpoint-%d.pth' % latest_ckpt)
-            print("Auto resume checkpoint: %s" % args.resume)
+    if loss_scaler is not None:
+        # torch.amp
+        if args.test_best and args.eval:
+            args.resume = os.path.join(output_dir, 'checkpoint-best.pth')
+        elif os.path.exists(os.path.join(output_dir, 'checkpoint-latest.pth')):
+            args.resume = os.path.join(output_dir, 'checkpoint-latest.pth')
+        elif os.path.exists(os.path.join(output_dir, 'checkpoint-best.pth')):
+            args.resume = os.path.join(output_dir, 'checkpoint-best.pth')
+        elif args.auto_resume and len(args.resume) == 0:
+            import glob
+            all_checkpoints = glob.glob(os.path.join(output_dir, 'checkpoint-*.pth'))
+            latest_ckpt = -1
+            for ckpt in all_checkpoints:
+                t = ckpt.split('-')[-1].split('.')[0]
+                if t.isdigit():
+                    latest_ckpt = max(int(t), latest_ckpt)
+            if latest_ckpt >= 0:
+                args.resume = os.path.join(output_dir, 'checkpoint-%d.pth' % latest_ckpt)
+        print("Auto resume checkpoint: %s" % args.resume)
 
-            if args.resume:
-                with io.BytesIO(client.get(args.resume)) as buffer:
-                    checkpoint = torch.load(buffer, map_location='cpu')
-                model_without_ddp.load_state_dict(checkpoint['model'])
-                print("Resume checkpoint %s" % args.resume)
-                if 'optimizer' in checkpoint and 'epoch' in checkpoint:
-                    optimizer.load_state_dict(checkpoint['optimizer'])
-                    args.start_epoch = checkpoint['epoch'] + 1
-                    if hasattr(args, 'model_ema') and args.model_ema:
-                        _load_checkpoint_for_ema(model_ema, checkpoint['model_ema'])
-                    if 'scaler' in checkpoint:
-                        loss_scaler.load_state_dict(checkpoint['scaler'])
-                    print("With optim & sched!")
-        else:
-            # deepspeed, only support '--auto_resume'.
-            flag = False
-            if args.test_best and args.eval:
-                try:
-                    load_specific_ceph_model(
-                        model, model_ema, args, sub_path, ceph_save_dir, 
-                        model_name='best', ceph_args=ceph_args
-                    )
-                    flag = True
-                except Exception:
-                    print('No best model')
-            if not flag:
-                try:
-                    load_specific_ceph_model(
-                        model, model_ema, args, sub_path, ceph_save_dir, 
-                        model_name='latest', ceph_args=ceph_args
-                    )
-                    flag = True
-                except Exception:
-                    print('No latest model')
-            if not flag:
-                try:
-                    load_specific_ceph_model(
-                        model, model_ema, args, sub_path, ceph_save_dir, 
-                        model_name='best', ceph_args=ceph_args
-                    )
-                    flag = True
-                except Exception:
-                    print('No best model')
-            if not flag: 
-                all_checkpoints = fnmatch.filter(list(client.list(ceph_save_dir)), 'checkpoint-*')
-                all_checkpoints = [
-                    os.path.join(ceph_save_dir, ckpt_path)
-                    for ckpt_path in all_checkpoints
-                ]
-                latest_ckpt = -1
-                for ckpt in all_checkpoints:
-                    t = ckpt.split('-')[-1].split('.')[0]
-                    if t.isdigit():
-                        latest_ckpt = max(int(t), latest_ckpt)
-                if latest_ckpt >= 0:
-                    load_specific_ceph_model(
-                        model, model_ema, args, sub_path, ceph_save_dir, 
-                        model_name=latest_ckpt, ceph_args=ceph_args
-                    )
-                else:
-                    print('No other models')
+        if args.resume:
+            checkpoint = torch.load(args.resume, map_location='cpu')
+            model_without_ddp.load_state_dict(checkpoint['model'])
+            print("Resume checkpoint %s" % args.resume)
+            if 'optimizer' in checkpoint and 'epoch' in checkpoint:
+                optimizer.load_state_dict(checkpoint['optimizer'])
+                args.start_epoch = checkpoint['epoch'] + 1
+                if hasattr(args, 'model_ema') and args.model_ema:
+                    _load_checkpoint_for_ema(model_ema, checkpoint['model_ema'])
+                if 'scaler' in checkpoint:
+                    loss_scaler.load_state_dict(checkpoint['scaler'])
+                print("With optim & sched!")
     else:
-        if loss_scaler is not None:
-            # torch.amp
-            if args.test_best and args.eval:
-                args.resume = os.path.join(output_dir, 'checkpoint-best.pth')
-            elif os.path.exists(os.path.join(output_dir, 'checkpoint-latest.pth')):
-                args.resume = os.path.join(output_dir, 'checkpoint-latest.pth')
-            elif os.path.exists(os.path.join(output_dir, 'checkpoint-best.pth')):
-                args.resume = os.path.join(output_dir, 'checkpoint-best.pth')
-            elif args.auto_resume and len(args.resume) == 0:
-                import glob
-                all_checkpoints = glob.glob(os.path.join(output_dir, 'checkpoint-*.pth'))
-                latest_ckpt = -1
-                for ckpt in all_checkpoints:
-                    t = ckpt.split('-')[-1].split('.')[0]
-                    if t.isdigit():
-                        latest_ckpt = max(int(t), latest_ckpt)
-                if latest_ckpt >= 0:
-                    args.resume = os.path.join(output_dir, 'checkpoint-%d.pth' % latest_ckpt)
-            print("Auto resume checkpoint: %s" % args.resume)
-
-            if args.resume:
-                checkpoint = torch.load(args.resume, map_location='cpu')
-                model_without_ddp.load_state_dict(checkpoint['model'])
-                print("Resume checkpoint %s" % args.resume)
-                if 'optimizer' in checkpoint and 'epoch' in checkpoint:
-                    optimizer.load_state_dict(checkpoint['optimizer'])
-                    args.start_epoch = checkpoint['epoch'] + 1
-                    if hasattr(args, 'model_ema') and args.model_ema:
-                        _load_checkpoint_for_ema(model_ema, checkpoint['model_ema'])
-                    if 'scaler' in checkpoint:
-                        loss_scaler.load_state_dict(checkpoint['scaler'])
-                    print("With optim & sched!")
-        else:
-            # deepspeed, only support '--auto_resume'.
-            flag = False
-            if args.test_best and args.eval:
-                try:
-                    load_specific_model(model, model_ema, args, output_dir, model_name='best')
-                    flag = True
-                except Exception:
-                    print('No best model')
-            if not flag:
-                try:
-                    load_specific_model(model, model_ema, args, output_dir, model_name='latest')
-                    flag = True
-                except Exception:
-                    print('No latest model')
-            if not flag:
-                try:
-                    load_specific_model(model, model_ema, args, output_dir, model_name='best')
-                    flag = True
-                except Exception:
-                    print('No best model')
-            if not flag: 
-                import glob
-                all_checkpoints = glob.glob(os.path.join(output_dir, 'checkpoint-*'))
-                latest_ckpt = -1
-                for ckpt in all_checkpoints:
-                    t = ckpt.split('-')[-1].split('.')[0]
-                    if t.isdigit():
-                        latest_ckpt = max(int(t), latest_ckpt)
-                if latest_ckpt >= 0:
-                    load_specific_model(model, model_ema, args, output_dir, model_name=latest_ckpt)
-                else:
-                    print('No other models')
+        # deepspeed, only support '--auto_resume'.
+        flag = False
+        if args.test_best and args.eval:
+            try:
+                load_specific_model(model, model_ema, args, output_dir, model_name='best')
+                flag = True
+            except Exception:
+                print('No best model')
+        if not flag:
+            try:
+                load_specific_model(model, model_ema, args, output_dir, model_name='latest')
+                flag = True
+            except Exception:
+                print('No latest model')
+        if not flag:
+            try:
+                load_specific_model(model, model_ema, args, output_dir, model_name='best')
+                flag = True
+            except Exception:
+                print('No best model')
+        if not flag: 
+            import glob
+            all_checkpoints = glob.glob(os.path.join(output_dir, 'checkpoint-*'))
+            latest_ckpt = -1
+            for ckpt in all_checkpoints:
+                t = ckpt.split('-')[-1].split('.')[0]
+                if t.isdigit():
+                    latest_ckpt = max(int(t), latest_ckpt)
+            if latest_ckpt >= 0:
+                load_specific_model(model, model_ema, args, output_dir, model_name=latest_ckpt)
+            else:
+                print('No other models')
 
 
 def load_specific_model(model, model_ema, args, output_dir, model_name):
@@ -691,46 +571,6 @@ def load_specific_model(model, model_ema, args, output_dir, model_name):
     if model_ema is not None:
         if args.model_ema:
             _load_checkpoint_for_ema(model_ema, client_states['model_ema'])
-
-
-def check_ceph_exists(ceph_path):
-    return list(client.list(ceph_path)) > 0
-
-
-def load_specific_ceph_model(model, model_ema, args, sub_path, ceph_save_dir, model_name, ceph_args):
-    tag_name = f'checkpoint-{model_name}'
-    args.resume = os.path.join(ceph_save_dir, tag_name)
-    print(f"Auto resume checkpoint: {args.resume}", flush=True)
-    shm_resume_dir = os.path.join('/dev/shm', sub_path, tag_name)
-    Path(shm_resume_dir).mkdir(parents=True, exist_ok=True)
-    
-    if ceph_args['local_rank'] == 0:
-        for f_name in client.list(args.resume):
-            ckpt_petrel_path = os.path.join(args.resume, f_name)
-            ckpt_shm_path = os.path.join(shm_resume_dir, f_name)
-            print(f"Download model from {ckpt_petrel_path}", flush=True)
-            with open(ckpt_shm_path, 'wb') as f:
-                f.write(memoryview(client.get(ckpt_petrel_path)))
-            print("Finish downloading!", flush=True)
-
-    torch.distributed.barrier()
-    
-    _, client_states = model.load_checkpoint(os.path.join('/dev/shm', sub_path), tag=f'checkpoint-{model_name}')
-    args.start_epoch = client_states['epoch'] + 1
-    if model_ema is not None:
-        if args.model_ema:
-            _load_checkpoint_for_ema(model_ema, client_states['model_ema'])
-
-    if ceph_args['local_rank'] == 0:
-        try:
-            for root, dirs, files in os.walk(shm_resume_dir):
-                for name in files:
-                    os.remove(os.path.join(root, name))
-                for name in dirs:
-                    os.rmdir(os.path.join(root, name))
-                os.rmdir(root)
-        except Exception as e:
-            print(f'Fail to clean {shm_resume_dir} with error {e}')
 
 
 def create_ds_config(args):
