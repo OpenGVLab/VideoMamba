@@ -18,7 +18,7 @@
   cd VideoMamba
   ```
 
-- Create Conda enviroments
+- Create Conda environments
 
   ```shell
   conda create -n mamba python=3.10
