@@ -7,7 +7,7 @@
   - Long-term Video Understanding: [script](./video_sm/README.md) & [model](./video_sm/MODEL_ZOO.md)
   - Masked Modeling: [script](./video_sm/README.md), [model](./video_sm/MODEL_ZOO.md)
 - [x] [video_mm](./video_mm/README.md): Multi-modality Video Tasks
-  - Video-Text Retrieval: [script](./video_sm/README.md) & [model](./video_sm/MODEL_ZOO.md)
+  - Video-Text Retrieval: [script](./video_mm/README.md) & [model](./video_mm/MODEL_ZOO.md)
 
 ## Installation
 

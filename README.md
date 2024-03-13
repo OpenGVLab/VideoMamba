@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<h2><a href="">VideoMamba: State Space Model for Efficient Video Understanding</a></h2>
+<h2><a href="https://arxiv.org/abs/2403.06977">VideoMamba: State Space Model for Efficient Video Understanding</a></h2>
 
 [Kunchang Li](https://scholar.google.com/citations?user=D4tLSbsAAAAJ), [Xinhao Li](https://leexinhao.github.io/), [Yi Wang](https://scholar.google.com.hk/citations?hl=zh-CN&user=Xm2M8UwAAAAJ), [Yinan He](https://scholar.google.com/citations?user=EgfF_CEAAAAJ), [Yali Wang](https://scholar.google.com/citations?user=hD948dkAAAAJ), [Limin Wang](https://scholar.google.com/citations?user=HEuN8PcAAAAJ) and [Yu Qiao](https://scholar.google.com/citations?user=gFtI-8QAAAAJ&hl)
 
@@ -16,11 +16,11 @@
   - [image_sm](./videomamba/image_sm/README.md): Single-modality Image Tasks
     - Image Classification: [script](./videomamba/image_sm/README.md) & [model](./videomamba/image_sm/MODEL_ZOO.md)
   - [video_sm](./videomamba/video_sm/README.md): Single-modality Video Tasks
-    - Short-term Video Understanding: [script](./videomamba/video_sm/README.md) & [model](./videomamba/video_sm/MODEL_ZOO.md)
-    - Long-term Video Understanding: [script](./videomamba/video_sm/README.md) & [model](./videomamba/video_sm/MODEL_ZOO.md)
-    - Masked Modeling: [script](./videomamba/video_sm/README.md), [model](./videomamba/video_sm/MODEL_ZOO.md)
+    - Short-term Video Understanding: [script](./videomamba/video_sm/README.md#short-term-video-understanding) & [model](./videomamba/video_sm/MODEL_ZOO.md#short-term-video-understanding)
+    - Long-term Video Understanding: [script](./videomamba/video_sm/README.md#long-term-video-understanding) & [model](./videomamba/video_sm/MODEL_ZOO.md#long-term-video-understanding)
+    - Masked Modeling: [script](./videomamba/video_sm/README.md#masked-pretraining), [model](./videomamba/video_sm/MODEL_ZOO.md#masked-pretraining)
   - [video_mm](./videomamba/video_mm/README.md): Multi-modality Video Tasks
-    - Video-Text Retrieval: [script](./videomamba/video_sm/README.md) & [model](./videomamba/video_sm/MODEL_ZOO.md)
+    - Video-Text Retrieval: [script](./videomamba/video_mm/README.md) & [model](./videomamba/video_mm/MODEL_ZOO.md)
 
 
 ## Introduction
@@ -34,7 +34,14 @@ Addressing the dual challenges of local redundancy and global dependencies in vi
 If you find this repository useful, please use the following BibTeX entry for citation.
 
 ```latex
-
+@misc{li2024videomamba,
+      title={VideoMamba: State Space Model for Efficient Video Understanding}, 
+      author={Kunchang Li and Xinhao Li and Yi Wang and Yinan He and Yali Wang and Limin Wang and Yu Qiao},
+      year={2024},
+      eprint={2403.06977},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
 ```
 
 ## License
