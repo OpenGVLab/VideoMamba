@@ -12,9 +12,9 @@ We load those models with K400 masked pretraining and further pretrain them on m
 
 | Model    | Setting     | Model  | Script  |
 | -------- | ----------- | ------ | ------- |
-| VideoMamba-M | 5M          |  [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_m16_5M_f8_res224.pth) | [script](./exp_pt/videomamba_middle_5m/run.sh)  |
-| VideoMamba-M | 17M          |  [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_m16_17M_f8_res224.pth) | [script](./exp_pt/videomamba_middle_17m/run.sh)  |
-| VideoMamba-M | 25M          |  [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_m16_25M_f8_res224.pth) | [script](./exp_pt/videomamba_middle_25m/run.sh)  |
+| VideoMamba-M | 5M          |  [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_m16_5M_f8_res224.pth), [:hugs:HF](https://huggingface.co/OpenGVLab/VideoMamba/blob/main/videomamba_m16_5M_f8_res224.pth) | [script](./exp_pt/videomamba_middle_5m/run.sh)  |
+| VideoMamba-M | 17M          |  [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_m16_17M_f8_res224.pth), [:hugs:HF](https://huggingface.co/OpenGVLab/VideoMamba/blob/main/videomamba_m16_17M_f8_res224.pth) | [script](./exp_pt/videomamba_middle_17m/run.sh)  |
+| VideoMamba-M | 25M          |  [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_m16_25M_f8_res224.pth), [:hugs:HF](https://huggingface.co/OpenGVLab/VideoMamba/blob/main/videomamba_m16_25M_f8_res224.pth) | [script](./exp_pt/videomamba_middle_25m/run.sh)  |
 
 
 ### Zero-shot Evaluation

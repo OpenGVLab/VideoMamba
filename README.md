@@ -12,6 +12,7 @@
 
 ## Update
 
+- **2024/03/13**: Fix some bugs and add :hugs:HF model links.
 - :fire: **2024/03/12**: **All the code and models are released.**
   - [image_sm](./videomamba/image_sm/README.md): Single-modality Image Tasks
     - Image Classification: [script](./videomamba/image_sm/README.md) & [model](./videomamba/image_sm/MODEL_ZOO.md)
