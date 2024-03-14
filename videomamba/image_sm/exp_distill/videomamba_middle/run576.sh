@@ -10,7 +10,7 @@ echo "PYTHONPATH: ${PYTHONPATH}"
 JOB_NAME='videomamba_middle_res224to448to576'
 OUTPUT_DIR="$(dirname $0)"
 
-python run_with_submitit_distill.py \
+python run_with_submitit.py \
     --root_dir_train your_imagenet_path/train/ \
     --meta_file_train your_imagenet_path/meta/train.txt \
     --root_dir_val your_imagenet_path/val/ \

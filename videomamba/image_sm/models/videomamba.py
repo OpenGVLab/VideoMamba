@@ -385,6 +385,28 @@ def videomamba_middle(pretrained=False, **kwargs):
     return model
 
 
+
+@register_model
+def videomamba_base(pretrained=False, **kwargs):
+    model = VisionMamba(
+        patch_size=16, 
+        embed_dim=768,
+        depth=24, 
+        rms_norm=True, 
+        residual_in_fp32=True, 
+        fused_add_norm=True, 
+        **kwargs
+    )
+    model.default_cfg = _cfg()
+    if pretrained:
+        checkpoint = torch.hub.load_state_dict_from_url(
+            url="",
+            map_location="cpu", check_hash=True
+        )
+        model.load_state_dict(checkpoint["model"])
+    return model
+
+
 if __name__ == '__main__':
     import time
     from fvcore.nn import FlopCountAnalysis

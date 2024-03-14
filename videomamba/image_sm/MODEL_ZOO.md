@@ -7,6 +7,7 @@
 | VideoMamba-Ti | 76.9  | 7M     | 1.1G  | [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_t16_in1k_res224.pth), [:hugs:HF](https://huggingface.co/OpenGVLab/VideoMamba/blob/main/videomamba_t16_in1k_res224.pth) | [run.sh](./exp/videomamba_tiny/run224.sh)      |
 | VideoMamba-S  | 81.2  | 26M     | 4.3G  | [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_s16_in1k_res224.pth), [:hugs:HF](https://huggingface.co/OpenGVLab/VideoMamba/blob/main/videomamba_s16_in1k_res224.pth) | [run.sh](./exp/videomamba_small/run224.sh)      |
 | VideoMamba-M w/ SD | 82.8  | 74M     | 12.7G  | [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_m16_in1k_res224.pth), [:hugs:HF](https://huggingface.co/OpenGVLab/VideoMamba/blob/main/videomamba_m16_in1k_res224.pth) | [run.sh](./exp_distill/videomamba_middle/run224.sh)      |
+| VideoMamba-B w/ SD | 82.7  | 98M     | 16.9G  | [aliyun](https://pjlab-gvm-data.oss-cn-shanghai.aliyuncs.com/videomamba/videomamba_b16_in1k_res224.pth), [:hugs:HF](https://huggingface.co/OpenGVLab/VideoMamba/blob/main/videomamba_b16_in1k_res224.pth) | [run.sh](./exp_distill/videomamba_base/run224.sh)      |
 
 > SD refers to Self-Distillation
 

@@ -2,10 +2,12 @@ from .videomamba import (
     videomamba_tiny,
     videomamba_small,
     videomamba_middle,
+    videomamba_base,
 )
 
 from .videomamba_distill import (
     videomamba_middle_distill,
+    videomamba_base_distill,
 )
 
 from .deit import (

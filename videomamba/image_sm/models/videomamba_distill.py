@@ -326,6 +326,22 @@ def videomamba_middle_distill(pretrained=False, **kwargs):
     return model
 
 
+
+@register_model
+def videomamba_base_distill(pretrained=False, **kwargs):
+    model = VisionMamba(
+        patch_size=16, 
+        embed_dim=768,
+        depth=24, 
+        rms_norm=True, 
+        residual_in_fp32=True, 
+        fused_add_norm=True, 
+        **kwargs
+    )
+    model.default_cfg = _cfg()
+    return model
+
+
 if __name__ == '__main__':
     import time
     from fvcore.nn import FlopCountAnalysis
