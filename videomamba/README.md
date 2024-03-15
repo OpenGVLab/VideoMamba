@@ -22,7 +22,7 @@
 
   ```shell
   conda create -n mamba python=3.10
-  conda create mamba
+  conda activate mamba
   ```
 
 
