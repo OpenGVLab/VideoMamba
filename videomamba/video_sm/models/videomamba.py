@@ -471,7 +471,7 @@ if __name__ == '__main__':
 
     # To evaluate GFLOPs, pleaset set `rms_norm=False` and `fused_add_norm=False`
     model = videomamba_middle(num_frames=num_frames).cuda()
-    flops = FlopCountAnalysis(model, torch.rand(1, 3, img_size, img_size).cuda())
+    flops = FlopCountAnalysis(model, torch.rand(1, 3, num_frames, img_size, img_size).cuda())
     s = time.time()
     print(flop_count_table(flops, max_depth=1))
     print(time.time()-s)
