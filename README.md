@@ -6,7 +6,7 @@
 
 [Kunchang Li](https://scholar.google.com/citations?user=D4tLSbsAAAAJ), [Xinhao Li](https://leexinhao.github.io/), [Yi Wang](https://scholar.google.com.hk/citations?hl=zh-CN&user=Xm2M8UwAAAAJ), [Yinan He](https://scholar.google.com/citations?user=EgfF_CEAAAAJ), [Yali Wang](https://scholar.google.com/citations?user=hD948dkAAAAJ), [Limin Wang](https://scholar.google.com/citations?user=HEuN8PcAAAAJ) and [Yu Qiao](https://scholar.google.com/citations?user=gFtI-8QAAAAJ&hl)
 
-[![Paper](https://img.shields.io/badge/cs.CV-2403.06977-b31b1b?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2403.06977) [![Paper](https://img.shields.io/badge/%F0%9F%A4%97%20Paper-2403.06977-blue)](https://huggingface.co/papers/2403.06977) [![Paper](https://img.shields.io/badge/%F0%9F%A4%97%20Model-VideoMamba-blue)](https://huggingface.co/OpenGVLab/VideoMamba) 
+[![Paper](https://img.shields.io/badge/cs.CV-2403.06977-b31b1b?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2403.06977) [![Paper](https://img.shields.io/badge/%F0%9F%A4%97%20Paper-2403.06977-blue)](https://huggingface.co/papers/2403.06977) [![Paper](https://img.shields.io/badge/%F0%9F%A4%97%20Model-VideoMamba-blue)](https://huggingface.co/OpenGVLab/VideoMamba) [![Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-VideoMamba-blue)](https://huggingface.co/spaces/OpenGVLab/VideoMamba) 
 
 ![teaser](./assets/comparison.png)
 </div>
