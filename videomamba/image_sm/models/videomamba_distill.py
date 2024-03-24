@@ -15,6 +15,8 @@ from timm.models.vision_transformer import _load_weights
 
 import math
 
+from huggingface_hub import PyTorchModelHubMixin
+
 from mamba_ssm.modules.mamba_simple import Mamba
 
 try:
@@ -156,7 +158,7 @@ def segm_init_weights(m):
         nn.init.constant_(m.weight, 1.0)
 
 
-class VisionMamba(nn.Module):
+class VisionMamba(nn.Module, PyTorchModelHubMixin:
     def __init__(
             self, 
             img_size=224, 
