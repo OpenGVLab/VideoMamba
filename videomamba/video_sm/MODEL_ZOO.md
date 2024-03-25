@@ -2,6 +2,7 @@
 
 ## Note
 
+- :warning: **2024/03/25**: The current video models are **fine-tuned without layer decay** due to the [bug](https://github.com/OpenGVLab/VideoMamba/blob/main/videomamba/video_sm/optim_factory.py#L24), which may help to improve the performances as in [MAE](https://github.com/facebookresearch/mae). We have fixed the bug but do not plan to retrain them.
 - For all the pretraining and finetuning, we adopt spaese/uniform sampling.
 - `#Frame` $=$ `#input_frame` $\times$ `#crop` $\times$ `#clip`
 - `#input_frame` means how many frames are input for model per inference
