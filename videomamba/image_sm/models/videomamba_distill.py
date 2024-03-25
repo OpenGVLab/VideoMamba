@@ -158,7 +158,10 @@ def segm_init_weights(m):
         nn.init.constant_(m.weight, 1.0)
 
 
-class VisionMamba(nn.Module, PyTorchModelHubMixin:
+class VisionMamba(nn.Module, PyTorchModelHubMixin,
+                  library_name="video_mamba",
+                  repo_url="https://github.com/OpenGVLab/VideoMamba",
+                  tags=["video-classification"]):
     def __init__(
             self, 
             img_size=224, 
