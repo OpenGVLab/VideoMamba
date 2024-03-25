@@ -34,7 +34,7 @@ def get_num_layer_for_vit(var_name, num_max_layer):
     elif var_name.startswith("transformer.resblocks"):
         layer_id = int(var_name.split('.')[2])
         return layer_id + 1
-    elif var_name.startswith("layer"): # for VideoMamba
+    elif var_name.startswith("layers"): # for VideoMamba
         layer_id = int(var_name.split('.')[1])
         return layer_id + 1
     elif var_name in ("class_embedding", "positional_embedding", "temporal_positional_embedding"):
