@@ -32,3 +32,4 @@ transformers==4.36.1
 wandb==0.16.2
 wheel==0.42.0
 xformers==0.0.24
+huggingface_hub>=0.22
