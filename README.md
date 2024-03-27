@@ -14,7 +14,7 @@
 
 ## Update
 
-- :warning: **2024/03/25**: The current video models are **fine-tuned without layer decay** due to the [bug](https://github.com/OpenGVLab/VideoMamba/blob/9806e369196c88f3eef92380c74beeb51208d0c3/videomamba/video_sm/optim_factory.py#L24), which may help to improve the performances as in [MAE](https://github.com/facebookresearch/mae). We have fixed the bug but do not plan to retrain them.
+- :warning: **2024/03/25**: <s>The current video models are **fine-tuned without layer decay** due to the [bug](https://github.com/OpenGVLab/VideoMamba/blob/9806e369196c88f3eef92380c74beeb51208d0c3/videomamba/video_sm/optim_factory.py#L24), which may help to improve the performances as in [MAE](https://github.com/facebookresearch/mae). We have fixed the bug but do not plan to retrain them.</s> We have applied it for VideoMamba-M but it does not help.
 - **2024/03/13**: Fix some bugs and add :hugs:HF model links.
 - :fire: **2024/03/12**: **All the code and models are released.**
   - [image_sm](./videomamba/image_sm/README.md): Single-modality Image Tasks
