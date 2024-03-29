@@ -427,8 +427,8 @@ class VisionMamba(nn.Module):
 
         return x_clip_vis
 
-    def forward(self, x, inference_params=None, mask=None):
-        x_clip_vis = self.forward_features(x, inference_params, mask)
+    def forward(self, x, mask=None):
+        x_clip_vis = self.forward_features(x, mask)
         
         # align CLIP
         K, B, _, C_CLIP = x_clip_vis.shape
