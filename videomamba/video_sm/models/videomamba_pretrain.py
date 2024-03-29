@@ -25,6 +25,8 @@ try:
 except ImportError:
     RMSNorm, layer_norm_fn, rms_norm_fn = None, None, None
 
+from huggingface_hub import PyTorchModelHubMixin
+
 
 class Block(nn.Module):
     def __init__(
@@ -236,7 +238,10 @@ def get_sinusoid_encoding_table(n_position, d_hid):
     return  torch.tensor(sinusoid_table, dtype=torch.float, requires_grad=False).unsqueeze(0) 
 
 
-class VisionMamba(nn.Module):
+class VisionMamba(nn.Module, 
+                  library_name="video_mamba",
+                  repo_url="https://github.com/OpenGVLab/VideoMamba",
+                  tags=["video-classification"]):
     def __init__(
             self, 
             img_size=224, 

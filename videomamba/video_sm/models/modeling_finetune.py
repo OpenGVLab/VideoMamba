@@ -7,8 +7,6 @@ from timm.models.layers import drop_path, to_2tuple, trunc_normal_
 from timm.models.registry import register_model
 import torch.utils.checkpoint as checkpoint
 
-from huggingface_hub import PyTorchModelHubMixin
-
 
 def _cfg(url='', **kwargs):
     return {
@@ -204,10 +202,7 @@ def get_sinusoid_encoding_table(n_position, d_hid, cur_frame=-1, pre_n_position=
         return nn.Parameter(sinusoid_table, requires_grad=True)
 
 
-class VisionTransformer(nn.Module, PyTorchModelHubMixin,
-                        library_name="video_mamba",
-                        repo_url="https://github.com/OpenGVLab/VideoMamba",
-                        tags=["image-classification"]):
+class VisionTransformer(nn.Module):
     """ Vision Transformer with support for patch or hybrid CNN input stage
     """
     def __init__(self, 

@@ -22,6 +22,8 @@ try:
 except ImportError:
     RMSNorm, layer_norm_fn, rms_norm_fn = None, None, None
 
+from huggingface_hub import PyTorchModelHubMixin
+
 
 class PatchEmbed(nn.Module):
     """ 2D Image to Patch Embedding
@@ -184,7 +186,11 @@ def segm_init_weights(m):
         nn.init.constant_(m.weight, 1.0)
 
 
-class VisionMamba(nn.Module):
+class VisionMamba(nn.Module,
+                  PyTorchModelHubMixin,
+                  library_name="video_mamba",
+                  repo_url="https://github.com/OpenGVLab/VideoMamba",
+                  tags=["image-classification"]):
     def __init__(
             self, 
             img_size=224, 

@@ -25,6 +25,8 @@ try:
 except ImportError:
     RMSNorm, layer_norm_fn, rms_norm_fn = None, None, None
 
+from huggingface_hub import PyTorchModelHubMixin
+
 
 MODEL_PATH = 'your_model_path'
 _MODELS = {
@@ -195,7 +197,10 @@ class PatchEmbed(nn.Module):
         return x
     
 
-class VisionMamba(nn.Module):
+class VisionMamba(nn.Module, 
+                  library_name="video_mamba",
+                  repo_url="https://github.com/OpenGVLab/VideoMamba",
+                  tags=["video-classification"]):
     def __init__(
             self, 
             img_size=224, 
