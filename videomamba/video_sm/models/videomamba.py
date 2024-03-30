@@ -16,6 +16,8 @@ from timm.models.layers import trunc_normal_
 from timm.models.layers import DropPath, to_2tuple
 from timm.models.vision_transformer import _load_weights
 
+from huggingface_hub import PyTorchModelHubMixin
+
 import math
 
 from mamba_ssm.modules.mamba_simple import Mamba
@@ -24,8 +26,6 @@ try:
     from mamba_ssm.ops.triton.layernorm import RMSNorm, layer_norm_fn, rms_norm_fn
 except ImportError:
     RMSNorm, layer_norm_fn, rms_norm_fn = None, None, None
-
-from huggingface_hub import PyTorchModelHubMixin
 
 
 MODEL_PATH = 'your_model_path'
@@ -197,7 +197,7 @@ class PatchEmbed(nn.Module):
         return x
     
 
-class VisionMamba(nn.Module, 
+class VisionMamba(nn.Module, PyTorchModelHubMixin,
                   library_name="video_mamba",
                   repo_url="https://github.com/OpenGVLab/VideoMamba",
                   tags=["video-classification"]):
