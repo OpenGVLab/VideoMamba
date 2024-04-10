@@ -238,10 +238,13 @@ def get_sinusoid_encoding_table(n_position, d_hid):
     return  torch.tensor(sinusoid_table, dtype=torch.float, requires_grad=False).unsqueeze(0) 
 
 
-class VisionMamba(nn.Module, 
-                  library_name="video_mamba",
-                  repo_url="https://github.com/OpenGVLab/VideoMamba",
-                  tags=["video-classification"]):
+class VisionMamba(
+    nn.Module,
+    PyTorchModelHubMixin
+    library_name="video_mamba",
+    repo_url="https://github.com/OpenGVLab/VideoMamba",
+    tags=["video-classification"]
+):
     def __init__(
             self, 
             img_size=224, 
