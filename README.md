@@ -6,7 +6,7 @@
 
 [Kunchang Li](https://scholar.google.com/citations?user=D4tLSbsAAAAJ), [Xinhao Li](https://leexinhao.github.io/), [Yi Wang](https://scholar.google.com.hk/citations?hl=zh-CN&user=Xm2M8UwAAAAJ), [Yinan He](https://scholar.google.com/citations?user=EgfF_CEAAAAJ), [Yali Wang](https://scholar.google.com/citations?user=hD948dkAAAAJ), [Limin Wang](https://scholar.google.com/citations?user=HEuN8PcAAAAJ) and [Yu Qiao](https://scholar.google.com/citations?user=gFtI-8QAAAAJ&hl)
 
-[![Paper](https://img.shields.io/badge/cs.CV-2403.06977-b31b1b?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2403.06977) [![Paper](https://img.shields.io/badge/%F0%9F%A4%97%20Paper-2403.06977-blue)](https://huggingface.co/papers/2403.06977) [![Paper](https://img.shields.io/badge/%F0%9F%A4%97%20Model-VideoMamba-blue)](https://huggingface.co/OpenGVLab/VideoMamba) [![Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-VideoMamba-blue)](https://huggingface.co/spaces/OpenGVLab/VideoMamba) 
+[![Paper](https://img.shields.io/badge/cs.CV-2403.06977-b31b1b?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2403.06977) [![Paper](https://img.shields.io/badge/%F0%9F%A4%97%20Paper-2403.06977-blue)](https://huggingface.co/papers/2403.06977) [![Paper](https://img.shields.io/badge/%F0%9F%A4%97%20Model-VideoMamba-blue)](https://huggingface.co/OpenGVLab/VideoMamba) [![Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-VideoMamba-blue)](https://huggingface.co/spaces/OpenGVLab/VideoMamba) [![Paper](https://img.shields.io/badge/Blog-VideoMamba-blue?logo=zhihu&logoColor=blue)](https://zhuanlan.zhihu.com/p/688140932)
 
 ![teaser](./assets/comparison.png)
 </div>
@@ -14,6 +14,7 @@
 
 ## Update
 
+- :warning: **2024/03/25**: <s>The current video models are **fine-tuned without layer decay** due to the [bug](https://github.com/OpenGVLab/VideoMamba/blob/9806e369196c88f3eef92380c74beeb51208d0c3/videomamba/video_sm/optim_factory.py#L24), which may help to improve the performances as in [MAE](https://github.com/facebookresearch/mae). We have fixed the bug but do not plan to retrain them.</s> We have applied it for VideoMamba-M but it does not help.
 - **2024/03/13**: Fix some bugs and add :hugs:HF model links.
 - :fire: **2024/03/12**: **All the code and models are released.**
   - [image_sm](./videomamba/image_sm/README.md): Single-modality Image Tasks
