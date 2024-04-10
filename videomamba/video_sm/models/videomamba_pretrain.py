@@ -240,7 +240,7 @@ def get_sinusoid_encoding_table(n_position, d_hid):
 
 class VisionMamba(
     nn.Module,
-    PyTorchModelHubMixin
+    PyTorchModelHubMixin,
     library_name="video_mamba",
     repo_url="https://github.com/OpenGVLab/VideoMamba",
     tags=["video-classification"]
